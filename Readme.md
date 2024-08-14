@@ -2,7 +2,7 @@
 
 A REST API for Turnitin.com.
 
-## Built by Ronak Badhe / Kento Nishi
+## Built by Joy Mutheu 
 
 ### Endpoints
 
