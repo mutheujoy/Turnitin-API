@@ -24,11 +24,11 @@ A REST API for Turnitin.com.
 ```bash
 pip install -r requirements.txt
 
-### Running the API
+** Running the API
 ```bash
 python app.py
 
-### Usage
+** Usage
 ```bash
 import requests
 
