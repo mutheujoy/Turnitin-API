@@ -1,0 +1,50 @@
+# Use the official Python image as a base image
+FROM python:3.9-slim
+
+# Metadata as described above
+LABEL maintainer="Your Name <your.email@example.com>"
+LABEL version="1.0"
+LABEL description="Docker image for the Turnitin API project."
+
+# Set environment variables
+# These prevent Python from writing out pyc files and buffering stdout and stderr
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Install system dependencies and clean up to reduce image size
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements file into the container
+COPY requirements.txt /app/
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the entire application code into the container
+COPY . /app/
+
+# Create a user to run the application
+RUN adduser --disabled-password --gecos '' appuser
+
+# Change ownership of the app directory
+RUN chown -R appuser /app
+
+# Switch to the new user
+USER appuser
+
+# Expose the port the app runs on
+EXPOSE 5000
+
+# Define environment variables for Flask
+ENV FLASK_APP=app.py
+ENV FLASK_ENV=production
+
+# Define the command to run the application
+CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
